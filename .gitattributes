@@ -1,0 +1,10 @@
+# Text files are stored with LF line endings. Scripts and configs stay LF on
+# every computer, so they run on Linux and macOS as well as Windows.
+* text=auto
+*.sh text eol=lf
+*.js text eol=lf
+*.json text eol=lf
+*.yml text eol=lf
+*.example text eol=lf
+*.pdf binary
+*.png binary
