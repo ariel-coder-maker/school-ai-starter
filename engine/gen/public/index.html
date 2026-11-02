@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>School AI · Teacher page</title>
+<style>
+  :root { --teal:#003C4B; --yellow:#FFCF01; --muted:#4E6E78; --tint:#E8F0F2; --line:#c9d8dc; --bad:#B42318; --good:#1E7A46; --bg:#fff; --text:#12262c; }
+  * { box-sizing: border-box; }
+  body { margin:0; font: 15px/1.45 system-ui, -apple-system, "Segoe UI", Calibri, sans-serif; color: var(--text); background: var(--bg); }
+  header { background: var(--teal); color:#fff; padding: 12px 20px; display:flex; flex-wrap:wrap; gap:10px 20px; align-items:center; }
+  header h1 { font-size: 18px; margin:0; }
+  .chip { background: rgba(255,255,255,.14); border-radius: 12px; padding: 2px 10px; font-size: 13px; }
+  .chip.warn { background: var(--yellow); color: var(--teal); font-weight:600; }
+  main { display:grid; grid-template-columns: minmax(280px, 380px) 1fr; gap: 20px; padding: 20px; max-width: 1400px; margin: 0 auto; }
+  @media (max-width: 860px) { main { grid-template-columns: 1fr; padding: 16px; } }
+  section { border:1px solid var(--line); border-radius: 10px; padding: 16px; min-width:0; }
+  h2 { font-size: 16px; margin: 0 0 10px; color: var(--teal); }
+  label { display:block; font-size: 13px; font-weight:600; margin: 10px 0 3px; color: var(--muted); }
+  input, select, textarea { width:100%; padding: 8px; border:1px solid var(--line); border-radius:6px; font: inherit; background:#fff; color: var(--text); }
+  textarea { min-height: 70px; resize: vertical; }
+  button { margin-top: 14px; width:100%; padding: 10px; border:0; border-radius: 8px; background: var(--teal); color:#fff; font: inherit; font-weight:600; cursor:pointer; }
+  button.secondary { background: var(--yellow); color: var(--teal); }
+  button:disabled { opacity:.55; cursor: wait; }
+  .hint { font-size: 12.5px; color: var(--muted); margin-top: 4px; }
+  .msg { margin-top: 12px; padding: 10px; border-radius: 8px; background: var(--tint); white-space: pre-wrap; }
+  .msg.bad { background:#FDECEA; color: var(--bad); }
+  .checks { width:100%; border-collapse: collapse; font-size: 13.5px; margin: 8px 0 12px; }
+  .checks td { border-bottom: 1px solid var(--line); padding: 5px 6px; vertical-align: top; }
+  .pass { color: var(--good); font-weight:700; white-space:nowrap; }
+  .fail { color: var(--bad); font-weight:700; white-space:nowrap; }
+  pre { background: #f6f9fa; border:1px solid var(--line); border-radius: 8px; padding: 12px; white-space: pre-wrap; word-break: break-word; max-height: 60vh; overflow:auto; font: 13px/1.45 ui-monospace, Consolas, monospace; }
+  .meta { font-size: 13px; color: var(--muted); }
+  #units { overflow-x: auto; }
+  .units { width:100%; border-collapse: collapse; font-size: 13.5px; }
+  .units td a { word-break: break-all; }
+  .units th, .units td { text-align:left; padding: 5px 6px; border-bottom: 1px solid var(--line); }
+  .state-approved { color: var(--good); } .state-out { color: var(--bad); font-weight:600; }
+  a { color: var(--teal); }
+  .hidden { display:none; }
+</style>
+</head>
+<body>
+<header>
+  <h1>School AI · Teacher page</h1>
+  <span id="chips"></span>
+</header>
+<main>
+  <section>
+    <h2>Make a step</h2>
+    <label for="kind">What to make</label>
+    <select id="kind">
+      <option value="outline">Unit · 1 Outline</option>
+      <option value="sequence">Unit · 2 Lesson sequence</option>
+      <option value="assessment">Unit · 3 Assessment</option>
+      <option value="rubric">Unit · Rubric</option>
+      <option value="lesson">Lesson plan</option>
+      <option value="worksheet">Worksheet</option>
+      <option value="slides">Slides</option>
+      <option value="order_list">Order list for a term</option>
+    </select>
+    <div id="f-subject"><label for="subject">Subject</label><select id="subject"></select></div>
+    <div id="f-unit"><label for="unit">Unit</label><select id="unit"></select></div>
+    <div id="f-new" class="hidden">
+      <label for="grade">Grade</label><input id="grade" placeholder="e.g. Grade 7">
+      <label for="term">Term</label><input id="term" inputmode="numeric" placeholder="1">
+      <label for="topic">Topic</label><input id="topic" placeholder="e.g. Forces and motion">
+    </div>
+    <div id="f-lesson" class="hidden"><label for="lesson">Lesson number</label><input id="lesson" inputmode="numeric" placeholder="3"></div>
+    <div id="f-term" class="hidden"><label for="oterm">Term</label><input id="oterm" inputmode="numeric" placeholder="1"></div>
+    <label for="teacher">Your name</label><input id="teacher" autocomplete="name" placeholder="Used for your folder and approvals">
+    <label for="feedback">What to change (to regenerate)</label>
+    <textarea id="feedback" placeholder="Leave empty for a first version"></textarea>
+    <button id="make">Make it</button>
+    <div class="hint">Each step waits until the steps it builds on are approved. A step usually takes one to three minutes.</div>
+    <div id="makeMsg"></div>
+  </section>
+
+  <section>
+    <h2 id="resultTitle">Result</h2>
+    <div id="result" class="meta">Make a step, or open one from the list below.</div>
+    <div id="approveBox" class="hidden">
+      <button id="approve" class="secondary">Approve this version</button>
+      <div class="hint">Approve only what you have read. Approving makes the Word or PowerPoint file.</div>
+    </div>
+    <div id="approveMsg"></div>
+    <h2 style="margin-top:22px">Units</h2>
+    <div id="units" class="meta">Loading…</div>
+  </section>
+</main>
+
+<script>
+const $ = (id) => document.getElementById(id);
+let status = null; let current = null;
+
+const esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+try { $('teacher').value = localStorage.getItem('teacher') || ''; } catch (e) {}
+
+async function api(path, body) {
+  const r = await fetch(path, body ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) } : {});
+  const j = await r.json();
+  if (!r.ok) throw new Error(j.error || `HTTP ${r.status}`);
+  return j;
+}
+
+async function loadStatus() {
+  status = await api('/api/status');
+  const live = status.chain.filter(c => c.usable);
+  $('chips').innerHTML = [
+    status.school ? '<span class="chip">School layer set up</span>' : '<span class="chip warn">School layer not set up: run setup</span>',
+    live.length ? `<span class="chip">AI: ${esc(live[0].model)}${live.length > 1 ? ` +${live.length - 1}` : ''}</span>` : '<span class="chip warn">No AI key yet</span>',
+    `<span class="chip">This month: $${status.spend.usd.toFixed(2)}${status.limit ? ` of $${status.limit}` : ''}</span>`,
+  ].join(' ');
+  const subj = $('subject').value;
+  $('subject').innerHTML = status.subjects.map(s => `<option value="${esc(s.subject)}">${esc(s.subject)} (framework ${esc(s.framework)})</option>`).join('')
+    || '<option value="">No subject yet: run setup, Block C</option>';
+  if (subj) $('subject').value = subj;
+  fillUnits();
+  renderUnits();
+}
+
+function fillUnits() {
+  const s = (status && status.subjects.find(x => x.subject === $('subject').value)) || { units: [] };
+  const keep = $('unit').value;
+  $('unit').innerHTML = s.units.map(u => `<option value="${esc(u.unit)}">${esc(u.unit)}</option>`).join('') || '<option value="">No units yet</option>';
+  if (keep) $('unit').value = keep;
+}
+
+function renderUnits() {
+  const rows = [];
+  for (const s of status.subjects) for (const u of s.units) {
+    const cell = (k, f) => {
+      const st = u.steps[k];
+      const cls = st.state === 'approved' ? 'state-approved' : st.state === 'out of date' ? 'state-out' : '';
+      return st.state === 'not made' ? '<td>—</td>'
+        : `<td><a href="#" data-file="01_curriculum/${esc(s.subject)}/units/${esc(u.unit)}/${f}" class="${cls}">${esc(st.state)}</a>${st.failedChecks ? ` <span class="fail">(${st.failedChecks})</span>` : ''}</td>`;
+    };
+    rows.push(`<tr><td>${esc(s.subject)}</td><td>${esc(u.unit)}</td>${cell('outline', '1_outline.md')}${cell('sequence', '2_sequence.md')}${cell('assessment', '3_assessment.md')}${cell('rubric', '3_rubric.md')}</tr>`);
+  }
+  const lessons = status.lessons.map(l => `<tr><td colspan="2"><a href="#" data-file="${esc(l.file)}">${esc(l.file.split('/').slice(-2).join('/'))}</a></td><td colspan="4" class="${l.state === 'approved' ? 'state-approved' : l.state === 'out of date' ? 'state-out' : ''}">${esc(l.state)}</td></tr>`);
+  $('units').innerHTML = rows.length || lessons.length
+    ? `<table class="units"><tr><th>Subject</th><th>Unit</th><th>Outline</th><th>Sequence</th><th>Assessment</th><th>Rubric</th></tr>${rows.join('')}${lessons.join('')}</table>`
+    : 'No units yet.';
+  document.querySelectorAll('[data-file]').forEach(a => a.onclick = (e) => { e.preventDefault(); openFile(a.dataset.file); });
+}
+
+function showFields() {
+  const k = $('kind').value;
+  $('f-new').classList.toggle('hidden', k !== 'outline');
+  $('f-unit').classList.toggle('hidden', k === 'order_list');
+  $('f-subject').classList.toggle('hidden', k === 'order_list');
+  $('f-lesson').classList.toggle('hidden', !['lesson', 'worksheet', 'slides'].includes(k));
+  $('f-term').classList.toggle('hidden', k !== 'order_list');
+}
+
+function showResult(file, text, checks, extra) {
+  current = file;
+  $('resultTitle').textContent = file.split('/').pop();
+  const list = (checks || []).map(c => `<tr><td class="${c.pass ? 'pass' : 'fail'}">${c.pass ? 'pass' : 'FAIL'}</td><td>${esc(c.check)}${c.pass || !c.why ? '' : `<br><span class="meta">${esc(c.why)}</span>`}</td></tr>`).join('');
+  $('result').innerHTML = `<div class="meta">${esc(file)}${extra ? ` · ${extra}` : ''}</div>`
+    + (list ? `<table class="checks">${list}</table>` : '')
+    + `<pre>${esc(String(text).replace(/^<!-- engine:.*-->\n?/m, ''))}</pre>`;
+  $('approveBox').classList.remove('hidden');
+  $('approveMsg').innerHTML = '';
+}
+
+// A checks report written by the engine, read back into a list.
+const parseChecks = (md) => (md || '').split('\n').filter(l => /^\| (pass|\*\*FAIL\*\*) \|/.test(l))
+  .map(l => { const c = l.split('|').map(x => x.trim()); return { pass: c[1] === 'pass', check: c[2], why: c[3] }; });
+
+async function openFile(file) {
+  try { const r = await api(`/api/file?path=${encodeURIComponent(file)}`); showResult(r.file, r.text, parseChecks(r.checks)); }
+  catch (e) { $('result').innerHTML = `<div class="msg bad">${esc(e.message)}</div>`; }
+}
+
+$('kind').onchange = showFields;
+$('subject').onchange = fillUnits;
+$('make').onclick = async () => {
+  const k = $('kind').value;
+  const body = { kind: k, subject: $('subject').value, teacher: $('teacher').value.trim(), feedback: $('feedback').value.trim() || undefined };
+  if (k === 'outline') Object.assign(body, { grade: $('grade').value.trim(), term: $('term').value.trim(), topic: $('topic').value.trim() });
+  else if (k === 'order_list') body.term = $('oterm').value.trim();
+  else body.unit = $('unit').value;
+  if (['lesson', 'worksheet', 'slides'].includes(k)) body.lesson = $('lesson').value.trim();
+  try { localStorage.setItem('teacher', body.teacher); } catch (e) {}
+  $('make').disabled = true; $('make').textContent = 'Working… (one to three minutes)';
+  $('makeMsg').innerHTML = '';
+  try {
+    const r = await api('/api/step', body);
+    showResult(r.file, r.text, r.checks, `made by ${esc(r.model)} for $${r.cost.toFixed(4)}`);
+    $('makeMsg').innerHTML = `<div class="msg">${r.failed ? `${r.failed} check(s) failed. Read them, then regenerate with what to change, or fix the file.` : 'Every check passed. Read it, then approve it.'}</div>`;
+    $('feedback').value = '';
+    await loadStatus();
+  } catch (e) { $('makeMsg').innerHTML = `<div class="msg bad">${esc(e.message)}</div>`; }
+  finally { $('make').disabled = false; $('make').textContent = 'Make it'; }
+};
+$('approve').onclick = async () => {
+  const by = $('teacher').value.trim();
+  if (!by) { $('approveMsg').innerHTML = '<div class="msg bad">Type your name first (left).</div>'; return; }
+  try {
+    const r = await api('/api/approve', { file: current, by });
+    const dl = r.rendered && !/kept\)$/.test(r.rendered) ? ` <a href="/download?path=${encodeURIComponent(r.rendered)}">Download ${esc(r.rendered.split('/').pop())}</a>` : (r.rendered ? ` ${esc(r.rendered)}` : '');
+    $('approveMsg').innerHTML = `<div class="msg">Approved by ${esc(r.by)}.${dl}</div>`;
+    await loadStatus();
+  } catch (e) { $('approveMsg').innerHTML = `<div class="msg bad">${esc(e.message)}</div>`; }
+};
+
+showFields();
+loadStatus().catch(e => { $('units').innerHTML = `<div class="msg bad">The engine is not answering: ${esc(e.message)}</div>`; });
+</script>
+</body>
+</html>

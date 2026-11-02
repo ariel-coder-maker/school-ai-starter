@@ -1,0 +1,34 @@
+# Keys: never committed
+.env
+engine/.env
+*.key
+
+# The school's own information stays on the school's machines.
+# Delete these lines only if this is a private repository for your own school.
+00_school/*.md
+!00_school/_templates/
+01_curriculum/*/
+!01_curriculum/_template/
+02_sources/*
+!02_sources/README.md
+03_resources/*.md
+!03_resources/README.md
+06_outputs/*
+!06_outputs/README.md
+
+# Engine data
+engine/data/
+engine/n8n_data/
+engine/postgres_data/
+*.log
+
+# Office lock files and OS clutter
+~$*
+.DS_Store
+Thumbs.db
+
+# Engine libraries (installed on start)
+node_modules/
+
+# Build notes for the maintainer (not part of the kit)
+BUILD_STATUS.md
