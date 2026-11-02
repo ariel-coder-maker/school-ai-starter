@@ -1,0 +1,24 @@
+{
+  "_README": [
+    "The order AI models are tried in: cheapest first. DATA, NOT CODE. To change the order, add a model or drop one, edit this file and nothing else.",
+    "A step whose key (or model name) is empty in engine/.env is skipped, and says why.",
+    "The engine moves to the next step only when a provider can't answer: no key, wrong key, no credit, rate limit, timeout, server error. An answer that FAILS THE CHECKS is not sent to the next model. It's saved, marked with its problems, and the teacher regenerates with feedback. A failed check is not a reason to buy a second opinion.",
+    "Prices are US dollars per million tokens (in = what you send, out = what comes back), as published in October 2026. Check each provider's page; they change."
+  ],
+  "chain": [
+    { "provider": "nvidia",     "model": "${NVIDIA_MODEL}",     "price_per_m": { "in": 0,    "out": 0    }, "why": "A free developer tier, rate-limited. Set NVIDIA_MODEL to a model from build.nvidia.com" },
+    { "provider": "dashscope",  "model": "qwen3.7-flash",       "price_per_m": { "in": 0.03, "out": 0.13 }, "why": "Cheapest paid model on published rates" },
+    { "provider": "anthropic",  "model": "claude-haiku-5-5",    "price_per_m": { "in": 0.10, "out": 0.50 }, "why": "Cheap and careful with formats. Rate shown is for prompts up to 100K tokens" },
+    { "provider": "deepseek",   "model": "deepseek-v4-flash",   "price_per_m": { "in": 0.14, "out": 0.28 }, "why": "Cheap; generated a full term of one school's Science" },
+    { "provider": "gemini",     "model": "gemini-3-flash",      "price_per_m": { "in": 0.50, "out": 3.00 }, "why": "A strong mid-price fallback" },
+    { "provider": "openai",     "model": "${OPENAI_MODEL}",     "price_per_m": { "in": null, "out": null }, "why": "Set OPENAI_MODEL and its price here to use it" },
+    { "provider": "openrouter", "model": "${OPENROUTER_MODEL}", "price_per_m": { "in": null, "out": null }, "why": "One key for many models. Set OPENROUTER_MODEL and its price here" },
+    { "provider": "anthropic",  "model": "claude-sonnet-5-5",   "price_per_m": { "in": 2.00, "out": 10.00 }, "why": "Last resort: the most capable step, and the dearest" }
+  ],
+  "review": {
+    "_why": "After the automatic checks, one AI read of the output against 05_checks/checks.md. Uses the same chain. Set enabled to false to skip it and save the cost.",
+    "enabled": true,
+    "max_tokens": 4000
+  },
+  "max_tokens": 32000
+}

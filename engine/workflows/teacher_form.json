@@ -1,0 +1,85 @@
+{
+  "name": "Make a step (teacher form)",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Make a step",
+        "formDescription": "Your school's AI curriculum engine. Each step waits until the steps it builds on are approved. A step takes one to three minutes. Read and approve results on the teacher page.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "What to make",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  { "option": "Unit 1: Outline" },
+                  { "option": "Unit 2: Lesson sequence" },
+                  { "option": "Unit 3: Assessment" },
+                  { "option": "Unit: Rubric" },
+                  { "option": "Lesson plan" },
+                  { "option": "Worksheet" },
+                  { "option": "Slides" },
+                  { "option": "Order list for a term" }
+                ]
+              },
+              "requiredField": true
+            },
+            { "fieldLabel": "Subject", "placeholder": "as named in 01_curriculum/, e.g. science" },
+            { "fieldLabel": "Unit", "placeholder": "for an existing unit, e.g. grade_7_t1_forces" },
+            { "fieldLabel": "Grade", "placeholder": "new unit only, e.g. Grade 7" },
+            { "fieldLabel": "Term", "placeholder": "new unit or order list, e.g. 1" },
+            { "fieldLabel": "Topic", "placeholder": "new unit only, e.g. Forces" },
+            { "fieldLabel": "Lesson number", "fieldType": "number" },
+            { "fieldLabel": "Your name", "requiredField": true },
+            { "fieldLabel": "What to change", "fieldType": "textarea", "placeholder": "Leave empty for a first version" }
+          ]
+        },
+        "options": {}
+      },
+      "id": "5b1a3f0e-0c1d-4e7a-9a51-1f2b3c4d5e01",
+      "name": "Teacher form",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [0, 0],
+      "webhookId": "make-a-step"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://engine:3000/api/step",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ kind: ({ 'Unit 1: Outline': 'outline', 'Unit 2: Lesson sequence': 'sequence', 'Unit 3: Assessment': 'assessment', 'Unit: Rubric': 'rubric', 'Lesson plan': 'lesson', 'Worksheet': 'worksheet', 'Slides': 'slides', 'Order list for a term': 'order_list' })[$json['What to make']], subject: $json['Subject'] || undefined, unit: $json['Unit'] || undefined, grade: $json['Grade'] || undefined, term: $json['Term'] || undefined, topic: $json['Topic'] || undefined, lesson: $json['Lesson number'] || undefined, teacher: $json['Your name'], feedback: $json['What to change'] || undefined }) }}",
+        "options": {
+          "response": { "response": { "neverError": true } },
+          "timeout": 600000
+        }
+      },
+      "id": "5b1a3f0e-0c1d-4e7a-9a51-1f2b3c4d5e02",
+      "name": "Ask the engine",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [260, 0]
+    },
+    {
+      "parameters": {
+        "operation": "completion",
+        "respondWith": "showText",
+        "responseText": "={{ $json.error ? '<h2>Not made</h2><p>' + $json.error + '</p>' : '<h2>Made: ' + $json.file + '</h2><p>By ' + $json.model + ' for $' + Number($json.cost).toFixed(4) + '. ' + ($json.failed ? $json.failed + ' check(s) failed: read them on the teacher page, then regenerate with what to change.' : 'Every check passed.') + '</p><p>Read it and approve it on the teacher page.</p><ul>' + ($json.checks || []).map(c => '<li>' + (c.pass ? 'pass' : '<b>FAIL</b>') + ' · ' + c.check + (c.pass ? '' : ': ' + c.why) + '</li>').join('') + '</ul>' }}"
+      },
+      "id": "5b1a3f0e-0c1d-4e7a-9a51-1f2b3c4d5e03",
+      "name": "Show the result",
+      "type": "n8n-nodes-base.form",
+      "typeVersion": 2.5,
+      "position": [520, 0],
+      "webhookId": "make-a-step-result"
+    }
+  ],
+  "connections": {
+    "Teacher form": { "main": [[{ "node": "Ask the engine", "type": "main", "index": 0 }]] },
+    "Ask the engine": { "main": [[{ "node": "Show the result", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" },
+  "active": false,
+  "id": "MakeAStepForm01"
+}

@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>School AI Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  @page { size: A4; margin: 12mm 14mm; }
+  :root { --teal:#003C4B; --yellow:#FFCF01; --muted:#4E6E78; --tint:#E8F0F2; --ytint:#FFF5C7; --line:#b9cbd0; }
+  * { box-sizing: border-box; }
+  body { font-family: Montserrat, Calibri, Arial, sans-serif; color: var(--teal); font-size: 9.3pt; line-height: 1.33; margin: 0; background:#fff; }
+  .page { page-break-after: always; }
+  .page:last-child { page-break-after: auto; }
+  header { display:flex; justify-content:space-between; align-items:baseline; border-bottom: 2px solid var(--teal); padding-bottom: 3px; margin-bottom: 7px; }
+  header .t { font-weight:700; font-size: 12.5pt; }
+  header .s { color: var(--muted); font-size: 8pt; }
+  h1 { font-size: 15.5pt; margin: 0 0 2px; line-height:1.15; }
+  h2 { font-size: 11.5pt; margin: 7px 0 3px; }
+  .p1 .std td { padding: 3px 6px; }
+  .p1 .grid td { padding: 5px 6px; }
+  .p1 { font-size: 8.9pt; }
+  .p1 .steps td { padding: 4px 7px; }
+  .p1 .qr { width: 20mm; height: 20mm; }
+  .p1 .kit { padding: 6px 11px; margin-top: 5px; }
+  h2 .tag { font-size: 8pt; font-weight:600; color: var(--muted); margin-left: 6px; }
+  p { margin: 0 0 4px; }
+  .lead { font-size: 10pt; margin-bottom: 4px; }
+  .muted { color: var(--muted); }
+  .small { font-size: 8pt; }
+  .num { display:inline-block; min-width:18px; height:18px; padding: 0 3px; border-radius:9px; background: var(--yellow); color: var(--teal); font-weight:700; text-align:center; line-height:18px; font-size: 8.5pt; margin-right:4px; }
+  table { width:100%; border-collapse: collapse; table-layout: fixed; }
+  td, th { vertical-align: top; text-align: left; }
+  .grid td { background: var(--tint); border: 3px solid #fff; padding: 6px 7px; }
+  .grid b { display:block; margin-bottom: 1px; }
+  .std th { background: var(--teal); color:#fff; padding: 4px 6px; font-size: 8.5pt; }
+  .std td { border-bottom: 1px solid #dbe6e9; padding: 4px 6px; }
+  .std td:first-child { font-weight:700; }
+  .steps td { padding: 6px 8px; background: var(--ytint); border: 3px solid #fff; }
+  .steps code, code { font-family: "Courier New", monospace; font-weight:700; background:#fff; padding: 0 3px; border-radius:3px; }
+  .fill td { border: 1px solid var(--line); padding: 4px 6px; }
+  .fill td.n { width: 9mm; background: var(--teal); color:#fff; font-weight:700; text-align:center; font-size: 8.5pt; }
+  .fill td.q { width: 40%; background: var(--tint); font-size: 8.6pt; }
+  .fill td.q i { color: var(--muted); font-style: normal; font-size: 7.8pt; display:block; }
+  .fill td.a { font-size: 8.4pt; }
+  .h10 td { height: 10.5mm; }
+  .h12 td { height: 12.5mm; }
+  .tall td.a { height: 19mm; }
+  .tick { white-space: nowrap; margin-right: 7px; display:inline-block; }
+  .tick::before { content: "☐ "; font-size: 10pt; }
+  .warn { background: var(--yellow); font-weight:700; padding: 4px 8px; border-radius: 6px; margin: 3px 0 4px; font-size: 8.6pt; }
+  .box { border: 1.5px solid var(--teal); border-radius: 8px; padding: 7px 11px; margin-top: 5px; }
+  .prompt { font-family: "Courier New", monospace; font-size: 8.4pt; background: var(--tint); border-left: 4px solid var(--teal); padding: 7px 10px; line-height: 1.35; }
+  .principles td { padding: 5px 7px; border: 3px solid #fff; background: var(--tint); width: 50%; }
+  .weeks th { background: var(--teal); color: #fff; padding: 4px 6px; font-size: 8.5pt; }
+  .weeks td { border: 1px solid var(--line); padding: 5px 6px; height: 27mm; font-size: 8.3pt; }
+  .kit { background: var(--ytint); border-radius: 8px; padding: 8px 12px; margin-top: 7px; display:flex; gap: 12px; align-items:center; }
+  .qr { width: 24mm; height: 24mm; border: 1.5px dashed var(--teal); display:flex; align-items:center; justify-content:center; text-align:center; font-size: 7pt; color: var(--muted); flex: none; }
+  footer { margin-top: 6px; font-size: 7.8pt; color: var(--muted); }
+  .two { display:flex; gap: 10px; }
+  .two > div { flex: 1; }
+  img.qrimg { border: none; display: block; }
+</style>
+</head>
+<body>
+
+<!-- ============ PAGE 1 · HOW IT WORKS ============ -->
+<section class="page p1">
+  <header><span class="t">Build your school's AI program · Guide</span><span class="s">Beyond the AI Lesson Plan · AIFE Bangkok 2026</span></header>
+
+  <h1>Store your school once. Every request after that is one line.</h1>
+  <p class="lead">A chatbot only knows what you type. This kit stores your calendar, criteria, standards, resources and house style in a folder your AI reads first, so a teacher can ask for <b>"lesson 3 of my Grade 7 forces unit"</b> and get something that fits how your school teaches. It works for <b>IB MYP</b> out of the box, and for <b>any other program</b> with your own framework.</p>
+
+  <h2>The five layers</h2>
+  <table class="grid">
+    <tr>
+      <td><span class="num">1</span><b>School</b>Calendar, unit shape, assessment, policies, house style. Entered once.</td>
+      <td><span class="num">2</span><b>Curriculum</b>Criteria, standards, scope and sequence, textbooks. Per subject.</td>
+      <td><span class="num">3</span><b>Resources</b>Rooms, equipment, materials, class sizes. What you actually have.</td>
+      <td><span class="num">4</span><b>Generate</b>Unit, then lessons, then materials. One step at a time; you approve each.</td>
+      <td><span class="num">5</span><b>Check</b>Rules every output must pass before you see it. Every mistake becomes a rule.</td>
+    </tr>
+  </table>
+
+  <h2>Three levels: start at 1</h2>
+  <table class="std">
+    <tr><th style="width:24%">Level</th><th style="width:46%">What you get</th><th>What you need</th></tr>
+    <tr><td>1 · Folder</td><td>Your school in a folder your AI reads. Ask for a unit, lesson, worksheet, slides or rubric, built in steps and checked.</td><td>An AI tool you already use. Nothing to install.</td></tr>
+    <tr><td>2 · Folder + engine</td><td>A small program that runs every check automatically, tries the cheapest AI model first, logs every cent, and makes finished Word, PowerPoint and PDF files.</td><td>Docker Desktop and one AI API key. Setup walks you through both.</td></tr>
+    <tr><td>3 · School-hosted</td><td>The engine on a school server. One school layer; every teacher inherits it.</td><td>Your IT team, once Level 1 has worked for one course.</td></tr>
+  </table>
+
+  <h2>After today: three steps</h2>
+  <table class="steps">
+    <tr>
+      <td><span class="num">1</span><b>Download the kit.</b><br>Open the link below → green <b>Code</b> button → <b>Download ZIP</b> → unzip.</td>
+      <td><span class="num">2</span><b>Open the folder in your AI tool.</b><br>Claude Code, Codex, Cursor, Copilot or Gemini CLI. Browser chats work for Level 1.</td>
+      <td><span class="num">3</span><b>Type <code>setup</code>.</b><br>Send it a photo of your setup sheet. It asks only what's missing.</td>
+    </tr>
+  </table>
+
+  <h2>Where you start, by role</h2>
+  <table class="std">
+    <tr><th style="width:22%">You are</th><th style="width:40%">Start with</th><th>First win</th></tr>
+    <tr><td>Teacher</td><td>Level 1, one course. Skip Block B if your coordinator has done it.</td><td>One lesson you'd teach next week</td></tr>
+    <tr><td>Department head</td><td>Block C for your subject: verify the criteria once for everyone.</td><td>A checked framework and one agreed unit outline</td></tr>
+    <tr><td>Curriculum coordinator</td><td>Block B for the whole school, then one pilot department.</td><td>A school layer every teacher inherits</td></tr>
+    <tr><td>IT director</td><td>Shared folder, approved AI providers, then Level 2 on one machine.</td><td>A shared folder and a list of allowed providers</td></tr>
+    <tr><td>School leader</td><td>B1, B7, B9 and D6: calendar, policies, owner, budget.</td><td>A named owner and one pilot</td></tr>
+    <tr><td>Lab / resources</td><td>C7–C10 only.</td><td>An inventory the AI plans around, and an order list</td></tr>
+  </table>
+  <p class="small muted" style="margin-top:3px">Use only what you need: materials for units you already have (Blocks A–C), or a second opinion on your own work (<code>check this</code>).</p>
+
+  <div class="kit">
+    <img class="qr qrimg" src="repo_qr.svg" alt="QR code linking to the kit on GitHub">
+    <div><b>The starter kit:</b> <span style="font-family:'Courier New',monospace;font-weight:700">github.com/ariel-coder-maker/school-ai-starter</span><br>
+    <span class="small">Free. Folder structure, the guided setup, prompts for units, lessons, worksheets, slides and rubrics, a tested list of checks, and the optional engine. Ready-made IB MYP criteria names; a template for any other program.</span></div>
+  </div>
+</section>
+
+<!-- ============ PAGE 4 · BUILD IT FROM SCRATCH ============ -->
+<section class="page">
+  <header><span class="t">Building your own from scratch</span><span class="s">With or without the kit · any AI coding tool</span></header>
+
+  <p class="lead">You don't need the kit to build this. Your setup sheet is your specification: they hold everything the AI needs to know about your school. What follows is the design that made the kit work, as six rules and one prompt.</p>
+
+  <h2>Six design rules, learned the hard way</h2>
+  <table class="principles">
+    <tr>
+      <td><span class="num">1</span><b>Store it once, in files.</b> Calendar, criteria, resources and style live in a folder the AI reads before every request. Requests stay one line long.</td>
+      <td><span class="num">2</span><b>Make it in steps.</b> Outline, then lessons, then assessment, approved one at a time. Rejecting an outline costs a minute; rejecting a finished unit costs the unit.</td>
+    </tr>
+    <tr>
+      <td><span class="num">3</span><b>Every mistake becomes a check.</b> Write each rule as one testable sentence. The AI runs every check before you see the work.</td>
+      <td><span class="num">4</span><b>Never let it invent what must be real.</b> Criteria, standard codes, textbook content and equipment come from your files, or they don't appear.</td>
+    </tr>
+    <tr>
+      <td><span class="num">5</span><b>The cheapest model that passes the checks.</b> The checks, not the price of the model, keep quality up. Swap models as they improve.</td>
+      <td><span class="num">6</span><b>A person approves; no student data goes in.</b> The AI prepares, a teacher decides. No names, grades or reports in the folder.</td>
+    </tr>
+  </table>
+
+  <h2>The prompt that starts it</h2>
+  <p class="small muted">Make an empty folder, open it in Claude Code, Codex, Cursor or similar, and give it this with a photo of your setup sheet:</p>
+  <div class="prompt">Build a school curriculum assistant in this folder. Create START_HERE.md with the rules, and folders 00_school, 01_curriculum, 02_sources, 03_resources, 04_prompts, 05_checks and 06_outputs. Use my setup sheet (photo attached) to fill 00_school and 01_curriculum, and ask me one question at a time about anything missing. Then write prompts that make a unit in steps (outline, lessons, assessment), stopping for my approval at each step, and a checks file every output must pass before I see it. Never invent criteria, standards or equipment: if it isn't in my files, ask.</div>
+
+  <h2>Your first three checks</h2>
+  <table class="fill">
+    <tr><td class="n">1</td><td class="a" style="height:10mm"></td></tr>
+    <tr><td class="n">2</td><td class="a" style="height:10mm"></td></tr>
+    <tr><td class="n">3</td><td class="a" style="height:10mm"></td></tr>
+  </table>
+
+  <h2>Your next 30 days</h2>
+  <table class="weeks">
+    <tr><th>Week 1</th><th>Week 2</th><th>Week 3</th><th>Week 4</th></tr>
+    <tr>
+      <td>Download the kit, or make the folder. Run <code>setup</code> for one course.</td>
+      <td>Make one unit outline and approve it. Make two lessons; teach one.</td>
+      <td>Turn every mistake into a check. Make the next lessons' materials.</td>
+      <td>Share the folder with one colleague. <b>Leaders:</b> name the layer's owner and a pilot department.</td>
+    </tr>
+  </table>
+
+  <footer><b>Guardrails:</b> no student personal data in the folder · a teacher approves everything students see · the school owns the folder · use the AI providers your school's policy allows · never paste an API key into a chat.<br>
+  Ariel Dahan · MYP Sciences · Beyond the AI Lesson Plan, AIFE Bangkok 2026</footer>
+</section>
+
+
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>School AI Setup Sheet</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  @page { size: A4; margin: 11mm 13mm; }
+  :root { --teal:#003C4B; --yellow:#FFCF01; --muted:#4E6E78; --tint:#E8F0F2; --ytint:#FFF5C7; --line:#b9cbd0; }
+  * { box-sizing: border-box; }
+  body { font-family: Montserrat, Calibri, Arial, sans-serif; color: var(--teal); font-size: 8.8pt; line-height: 1.3; margin: 0; background:#fff; }
+  .page { page-break-after: always; }
+  .page:last-child { page-break-after: auto; }
+  header { display:flex; justify-content:space-between; align-items:baseline; border-bottom: 2px solid var(--teal); padding-bottom: 3px; margin-bottom: 5px; }
+  header .t { font-weight:700; font-size: 12.5pt; }
+  header .s { color: var(--muted); font-size: 8pt; }
+  code { font-family: "Courier New", monospace; font-weight:700; background:#fff; padding: 0 3px; border-radius:3px; }
+  .intro { display:flex; gap: 10px; align-items:stretch; background: var(--ytint); border-radius: 8px; padding: 6px 10px; margin-bottom: 4px; }
+  .intro .txt { flex:1; font-size: 8.5pt; }
+  .intro .txt b.big { font-size: 10pt; display:block; margin-bottom: 2px; }
+  .intro ol { margin: 2px 0 0 15px; padding: 0; }
+  .qr { width: 20mm; height: 20mm; border: 1.5px dashed var(--teal); display:flex; align-items:center; justify-content:center; text-align:center; font-size: 6.5pt; color: var(--muted); flex: none; align-self:center; }
+  .blockhead { display:flex; align-items:center; gap: 7px; margin: 7px 0 3px; }
+  .letter { width: 22px; height: 22px; border-radius: 5px; background: var(--teal); color: #fff; font-weight:700; font-size: 12pt; text-align:center; line-height: 22px; flex:none; }
+  .blockhead .name { font-weight:700; font-size: 11.5pt; }
+  .blockhead .becomes { color: var(--muted); font-size: 7.8pt; flex:1; }
+  .clock { background: var(--yellow); font-weight:700; font-size: 8.5pt; padding: 1px 8px; border-radius: 9px; white-space: nowrap; }
+  table { width:100%; border-collapse: collapse; table-layout: fixed; }
+  td { vertical-align: top; text-align: left; border: 1px solid var(--line); padding: 3px 6px; }
+  td.n { width: 9mm; background: var(--teal); color:#fff; font-weight:700; text-align:center; font-size: 8.5pt; }
+  td.q { width: 38%; background: var(--tint); font-size: 8.4pt; }
+  td.q i { color: var(--muted); font-style: normal; font-size: 7.4pt; display:block; line-height: 1.2; }
+  td.a { font-size: 8.2pt; }
+  tr.t td { height: 7.6mm; }
+  tr.w td { height: 11.5mm; }
+  tr.ww td { height: 14.5mm; }
+  tr.tall td { height: 20mm; }
+  .tick { white-space: nowrap; margin-right: 7px; display:inline-block; }
+  .tick::before { content: "☐ "; font-size: 9.5pt; }
+  .warn { background: var(--yellow); font-weight:700; padding: 3px 8px; border-radius: 5px; margin: 0 0 3px; font-size: 8.2pt; }
+  .sub { font-size: 7.8pt; color: var(--muted); margin: 0 0 2px; }
+  footer { margin-top: 6px; font-size: 7.6pt; color: var(--muted); border-top: 1px solid var(--line); padding-top: 4px; }
+  img.qrimg { border: none; display: block; }
+</style>
+</head>
+<body>
+
+<!-- ============ FRONT · BLOCKS A AND B ============ -->
+<section class="page">
+  <header><span class="t">Build your school's AI program · Setup sheet</span><span class="s">Beyond the AI Lesson Plan · AIFE Bangkok 2026</span></header>
+
+  <div class="intro">
+    <div class="txt">
+      <b class="big">Four blocks, four minutes each. Short notes are fine; skip what you don't know yet.</b>
+      Everything you write here is something you'd otherwise type into prompts forever. Afterwards:
+      <ol>
+        <li>Download the kit: <b style="font-family:'Courier New',monospace">github.com/ariel-coder-maker/school-ai-starter</b> → <b>Code</b> → <b>Download ZIP</b></li>
+        <li>Open the folder in Claude Code, Codex, Cursor, Copilot or Gemini.</li>
+        <li>Type <code>setup</code> and send a photo of this sheet. It reads your answers by code (A1, B4…) and asks only what's missing.</li>
+      </ol>
+    </div>
+    <img class="qr qrimg" src="repo_qr.svg" alt="QR code linking to the kit on GitHub">
+  </div>
+
+  <div class="blockhead"><span class="letter">A</span><span class="name">You and your school</span><span class="becomes">decides where setup starts · becomes 00_school/</span><span class="clock">4 min</span></div>
+  <table>
+    <tr class="t"><td class="n">A1</td><td class="q">Your role</td><td class="a"><span class="tick">Teacher</span><span class="tick">Dept head</span><span class="tick">Coordinator</span><span class="tick">IT</span><span class="tick">Leader</span><span class="tick">Other ______</span></td></tr>
+    <tr class="t"><td class="n">A2</td><td class="q">What do you want first?</td><td class="a"><span class="tick">One course</span><span class="tick">A department</span><span class="tick">Whole school</span><span class="tick">Just exploring</span></td></tr>
+    <tr class="t"><td class="n">A3</td><td class="q">Your AI tool</td><td class="a"><span class="tick">Claude</span><span class="tick">ChatGPT / Codex</span><span class="tick">Cursor</span><span class="tick">Copilot</span><span class="tick">Gemini</span><span class="tick">Other ____</span></td></tr>
+    <tr class="t"><td class="n">A4</td><td class="q">Used a terminal (command line) before?</td><td class="a"><span class="tick">Never</span><span class="tick">A little</span><span class="tick">Comfortable</span></td></tr>
+    <tr class="t"><td class="n">A5</td><td class="q">Level <i>1: just a folder, nothing to install. 2: adds the engine (Docker + API key). 3: on a school server</i></td><td class="a"><span class="tick">1 Folder</span><span class="tick">2 + engine</span><span class="tick">3 School-hosted</span><br><span class="small" style="color:var(--muted);font-size:7.4pt">Most people start at 1</span></td></tr>
+    <tr class="t"><td class="n">A6</td><td class="q">Where will the folder live?</td><td class="a"><span class="tick">My computer</span><span class="tick">Google Drive</span><span class="tick">OneDrive</span><span class="tick">School network</span></td></tr>
+    <tr class="w"><td class="n">A7</td><td class="q">School (optional), city, country<i>Country decides what can be bought, and local examples</i></td><td class="a"></td></tr>
+    <tr class="t"><td class="n">A8</td><td class="q">Program</td><td class="a"><span class="tick">IB MYP</span><span class="tick">IB DP</span><span class="tick">IB PYP</span><span class="tick">AP</span><span class="tick">IGCSE / A Level</span><br><span class="tick">National / state: ________________</span></td></tr>
+    <tr class="w"><td class="n">A9</td><td class="q">Grades in scope, and what you call them<i>e.g. "Grades 6–10 = MYP 1–5"</i></td><td class="a"></td></tr>
+    <tr class="w"><td class="n">A10</td><td class="q">Language of instruction · spelling · students learning in an additional language</td><td class="a">Language: ______________ &nbsp;<span class="tick">US</span><span class="tick">UK</span>spelling<br>About ____ % learning in an additional language</td></tr>
+  </table>
+
+  <div class="blockhead"><span class="letter">B</span><span class="name">Calendar and assessment</span><span class="becomes">entered once, usually by the coordinator · becomes 00_school/</span><span class="clock">4 min</span></div>
+  <table>
+    <tr class="ww"><td class="n">B1</td><td class="q">School year: number of terms and their dates</td><td class="a"></td></tr>
+    <tr class="w"><td class="n">B2</td><td class="q">Learning weeks per term<i>Not holidays, exams or trips</i></td><td class="a"></td></tr>
+    <tr class="w"><td class="n">B3</td><td class="q">Period: minutes timetabled / actually taught · lessons per week</td><td class="a">____ min timetabled &nbsp;/&nbsp; ____ min taught &nbsp;·&nbsp; ____ lessons a week</td></tr>
+    <tr class="ww"><td class="n">B4</td><td class="q">Unit shape: units per term, lessons per unit, when summatives must finish</td><td class="a"></td></tr>
+    <tr class="ww"><td class="n">B5</td><td class="q">Criteria and grading scale; what a rubric must look like<i>e.g. MYP A–D on 0–8; A–F; IGCSE 9–1</i></td><td class="a"></td></tr>
+    <tr class="ww"><td class="n">B6</td><td class="q">Planner platform, and fields every plan must fill<i>e.g. Toddle, ManageBac, Atlas; ATL, inquiry questions</i></td><td class="a"></td></tr>
+    <tr class="w"><td class="n">B7</td><td class="q">Policies that change the work<i>Homework, devices, AI use, safety</i></td><td class="a"></td></tr>
+    <tr class="w"><td class="n">B8</td><td class="q">House style: reading level, tone, format, never-dos</td><td class="a"></td></tr>
+    <tr class="w"><td class="n">B9</td><td class="q">Who owns this layer and updates it each year?</td><td class="a"></td></tr>
+  </table>
+</section>
+
+<!-- ============ BACK · BLOCKS C AND D ============ -->
+<section class="page">
+  <header><span class="t">Setup sheet · Blocks C and D</span><span class="s">Skip anything you don't know yet. Setup records it as TODO.</span></header>
+
+  <div class="blockhead"><span class="letter">C</span><span class="name">Curriculum and resources</span><span class="becomes">one subject first · becomes 01_curriculum/, 02_sources/, 03_resources/</span><span class="clock">4 min</span></div>
+  <table>
+    <tr class="w"><td class="n">C1</td><td class="q">Subject first, and which grades</td><td class="a"></td></tr>
+    <tr class="w"><td class="n">C2</td><td class="q">Assessment criteria<i>The AI never writes criteria from memory</i></td><td class="a"><span class="tick">IB MYP (strands from our guide)</span><span class="tick">I have the official document</span><span class="tick">Not yet</span></td></tr>
+    <tr class="w"><td class="n">C3</td><td class="q">Standards you align to</td><td class="a"><span class="tick">NGSS</span><span class="tick">Common Core</span><span class="tick">AERO</span><span class="tick">National / state ________</span><span class="tick">None</span></td></tr>
+    <tr class="ww"><td class="n">C4</td><td class="q">Existing scope and sequence or unit plans? Where?</td><td class="a"></td></tr>
+    <tr class="ww"><td class="n">C5</td><td class="q">Textbooks and sources you're licensed to use</td><td class="a"></td></tr>
+    <tr class="ww"><td class="n">C6</td><td class="q">Topics to avoid · local context to include</td><td class="a"></td></tr>
+    <tr class="ww"><td class="n">C7</td><td class="q">Rooms and equipment<i>Labs, studios, devices per student</i></td><td class="a"></td></tr>
+    <tr class="ww"><td class="n">C8</td><td class="q">Materials: inventory? Buyable locally? Budget per term?</td><td class="a"></td></tr>
+    <tr class="w"><td class="n">C9</td><td class="q">Class size · most groups at once</td><td class="a">____ students &nbsp;·&nbsp; up to ____ groups</td></tr>
+    <tr class="w"><td class="n">C10</td><td class="q">Learning support to build in<i>General needs only, never names</i></td><td class="a"></td></tr>
+  </table>
+
+  <div class="blockhead"><span class="letter">D</span><span class="name">First output, checks and engine</span><span class="becomes">becomes 05_checks/ · D5–D8 only for Level 2 and 3</span><span class="clock">4 min</span></div>
+  <table>
+    <tr class="t"><td class="n">D1</td><td class="q">The first thing it should make</td><td class="a"><span class="tick">Unit plan</span><span class="tick">One lesson</span><span class="tick">Worksheet</span><span class="tick">Slides</span><span class="tick">Rubric</span></td></tr>
+    <tr class="t"><td class="n">D2</td><td class="q">File types you'll open</td><td class="a"><span class="tick">Docs / Word</span><span class="tick">Slides / PowerPoint</span><span class="tick">PDF</span><span class="tick">Plain text</span></td></tr>
+    <tr class="tall"><td class="n">D3</td><td class="q">One rule every output must pass<i>One sentence. If you can't state it, the AI can't meet it. e.g. "every question names its criterion"</i></td><td class="a"></td></tr>
+    <tr class="w"><td class="n">D4</td><td class="q">Who approves each step before students see it?</td><td class="a"></td></tr>
+  </table>
+  <div class="warn" style="margin-top:4px">Never write an API key on paper or paste it into a chat. Setup shows you the file on your own computer to type it into.</div>
+  <table>
+    <tr class="w"><td class="n">D5</td><td class="q">AI providers you have or can get keys for</td><td class="a"><span class="tick">Anthropic</span><span class="tick">OpenAI</span><span class="tick">Google Gemini</span><span class="tick">DeepSeek</span><span class="tick">Qwen</span><span class="tick">NVIDIA (free)</span><span class="tick">OpenRouter</span></td></tr>
+    <tr class="t"><td class="n">D6</td><td class="q">Monthly spending limit · cheapest model first?</td><td class="a">$ ______ a month &nbsp; <span class="tick">Cheapest first</span></td></tr>
+    <tr class="t"><td class="n">D7</td><td class="q">Where will it run?</td><td class="a"><span class="tick">My laptop</span><span class="tick">School server</span><span class="tick">Cloud machine</span></td></tr>
+    <tr class="w"><td class="n">D8</td><td class="q">Who looks after it: updates, backups, keys?</td><td class="a"></td></tr>
+  </table>
+
+  <footer><b>Guardrails:</b> no student personal data in the folder · a teacher approves everything students see · the school owns the folder · use the AI providers your school's policy allows · never paste an API key into a chat.<br>
+  Ariel Dahan · MYP Sciences · Beyond the AI Lesson Plan, AIFE Bangkok 2026</footer>
+</section>
+
+</body>
+</html>
