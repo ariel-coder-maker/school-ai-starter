@@ -18,7 +18,7 @@ few cents.
 | **Alibaba Qwen** | `DASHSCOPE_API_KEY` | Alibaba Cloud Model Studio (international) → *API keys* | `qwen3.7-flash` | $0.03 / $0.13 | Keys work in one region only. If yours isn't international, change `DASHSCOPE_BASE_URL` |
 | **Anthropic (Claude)** | `ANTHROPIC_API_KEY` | console.anthropic.com → *API keys* | `claude-haiku-5-5`, then `claude-sonnet-5-5` | Haiku $0.10 / $0.50 · Sonnet $2 / $10 | Needs prepaid credit. A Claude subscription is separate from API credit |
 | **DeepSeek** | `DEEPSEEK_API_KEY` | platform.deepseek.com → *API keys* | `deepseek-v4-flash` | $0.14 / $0.28 | Needs a small top-up |
-| **Google Gemini** | `GEMINI_API_KEY` | aistudio.google.com → *Get API key* | `gemini-3-flash` | $0.50 / $3.00 | Has a free tier with lower limits |
+| **Google Gemini** | `GEMINI_API_KEY` | aistudio.google.com → *Get API key* | `gemini-flash-latest` | $0.50 / $3.00 | Has a free tier with lower limits. The name always points at Google's current Flash model |
 | **OpenAI** | `OPENAI_API_KEY`, `OPENAI_MODEL` | platform.openai.com → *API keys* | the model you choose | set it in `model_chain.json` | Add the model's price to `config/model_chain.json` so costs are logged correctly |
 | **OpenRouter** | `OPENROUTER_API_KEY`, `OPENROUTER_MODEL` | openrouter.ai → *Keys* | the model you choose | set it in `model_chain.json` | One key, many models |
 
@@ -39,3 +39,16 @@ docker compose -f engine/docker-compose.yml exec engine node chain.js
 
 It lists every step, marks the ones that can run, and says why the others
 can't (for example, "no key in .env"). It never prints a key.
+
+## "Model not found"?
+
+Providers rename and retire models. To check every model name in the order
+against what each provider offers today (free, no AI call):
+
+```bash
+docker compose -f engine/docker-compose.yml exec engine node chain.js --check
+```
+
+It tests each key and each model name, and for a name that's gone, it lists
+similar names that exist. Copy one into `config/model_chain.json` and restart
+the engine.

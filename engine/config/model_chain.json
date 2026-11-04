@@ -10,7 +10,7 @@
     { "provider": "dashscope",  "model": "qwen3.7-flash",       "price_per_m": { "in": 0.03, "out": 0.13 }, "why": "Cheapest paid model on published rates" },
     { "provider": "anthropic",  "model": "claude-haiku-5-5",    "price_per_m": { "in": 0.10, "out": 0.50 }, "why": "Cheap and careful with formats. Rate shown is for prompts up to 100K tokens" },
     { "provider": "deepseek",   "model": "deepseek-v4-flash",   "price_per_m": { "in": 0.14, "out": 0.28 }, "why": "Cheap; generated a full term of one school's Science" },
-    { "provider": "gemini",     "model": "gemini-3-flash",      "price_per_m": { "in": 0.50, "out": 3.00 }, "why": "A strong mid-price fallback" },
+    { "provider": "gemini",     "model": "gemini-flash-latest", "price_per_m": { "in": 0.50, "out": 3.00 }, "why": "A strong mid-price fallback. 'gemini-flash-latest' always points at Google's current Flash model, so this line doesn't go out of date; check the price on Google's page" },
     { "provider": "openai",     "model": "${OPENAI_MODEL}",     "price_per_m": { "in": null, "out": null }, "why": "Set OPENAI_MODEL and its price here to use it" },
     { "provider": "openrouter", "model": "${OPENROUTER_MODEL}", "price_per_m": { "in": null, "out": null }, "why": "One key for many models. Set OPENROUTER_MODEL and its price here" },
     { "provider": "anthropic",  "model": "claude-sonnet-5-5",   "price_per_m": { "in": 2.00, "out": 10.00 }, "why": "Last resort: the most capable step, and the dearest" }
