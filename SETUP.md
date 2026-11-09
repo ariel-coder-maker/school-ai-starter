@@ -113,10 +113,16 @@ run it.
 7. **First run:** `docker compose -f engine/docker-compose.yml exec engine node first_run.js`
    It creates the database tables and says in plain words what it found and
    what is still missing. The first start takes about a minute while the
-   engine installs its libraries.
-8. **The teacher page:** open http://localhost:3000 (or the `ENGINE_PORT` they
-   chose). That's where they make a step, read its checks, approve it and
-   download the Word or PowerPoint file.
+   engine installs its libraries. **It prints a one-use link for the admin
+   account** (valid 7 days): the person who looks after the school layer opens
+   it and chooses a name and password.
+8. **The teacher page:** http://localhost:3000 (or the `ENGINE_PORT` they
+   chose). Everyone signs in. The admin invites each teacher from the
+   **Admin** page, which makes a one-use link to send them. A teacher's first
+   screen asks them to add their classes; from there they make units, lessons
+   and materials, read each one's checks, approve it in their own name and
+   download the Word or PowerPoint file. A lost link? This makes another:
+   `docker compose -f engine/docker-compose.yml exec engine node users.js invite teacher`
 9. **The n8n form (optional):** to make steps from an n8n form as well, run
    `docker compose -f engine/docker-compose.yml exec n8n n8n import:workflow --input=/workflows/teacher_form.json`
    and `docker compose -f engine/docker-compose.yml exec n8n n8n publish:workflow --id=MakeAStepForm01`,

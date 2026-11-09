@@ -50,7 +50,7 @@ whichever you use.
 | Level | What you get | What you need |
 |---|---|---|
 | **1 · Folder** | Your school's information in a folder your AI reads. Ask for a unit, lesson, worksheet, slides or rubric; it's built in steps you approve and checked against your rules | An AI tool. Nothing to install |
-| **2 · Folder + engine** | Adds a small program on your computer (n8n and a database, run by Docker). It generates in steps, runs every check automatically, tries the cheapest AI model first, logs every cent, and produces finished Word, PowerPoint and PDF files | Docker Desktop, and an API key from at least one AI provider. Setup walks you through both |
+| **2 · Folder + engine** | Adds a small program on your computer (n8n and a database, run by Docker), with a teacher app colleagues sign in to by invite. It generates in steps, runs every check automatically, tries the cheapest AI model first, logs every cent, and produces finished Word and PowerPoint files | Docker Desktop, and an API key from at least one AI provider. Setup walks you through both |
 | **3 · School-hosted** | The engine on a school server: one school layer, every teacher inherits it | Your IT team. `docs/HOSTING.md` is written for them |
 
 Most people should stay at Level 1 until it has produced something they'd

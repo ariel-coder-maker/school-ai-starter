@@ -22,11 +22,30 @@ you through Docker, keys and the first run (`SETUP.md`, Step 3).
 | `gen/status.js` | Where everything stands, and this month's spend |
 | `gen/chain.js` | Which AI models will run, and why the others won't |
 | `gen/first_run.js` | Run once after the first start |
-| `gen/server.js` | The teacher page (http://localhost:3000) and the API n8n calls |
+| `gen/server.js` | The teacher app on http://localhost:3000 (sign-in required), and an internal port (3001, never published) that n8n calls |
+| `gen/public/` | The teacher app: sign-in, my classes, units, lessons, files, admin |
+| `gen/lib/auth.js`, `gen/users.js` | Accounts, invite links and sessions; `node users.js invite teacher` |
+| `gen/school.js` | Reading and editing the school layer from the Admin page, keeping earlier versions |
+| `gen/test/` | Unit tests: `node --test test/*.test.js` |
+| `test/publish_audit.py` | Scans every file and commit for keys, emails and school data before anything is published |
 | `gen/lib/` | Reading the kit folder, the database, the model chain, the checks |
 | `gen/practice/` | Worked examples, returned instead of AI answers when `ENGINE_PRACTICE=1` |
 | `workflows/teacher_form.json` | An n8n form that makes a step through the engine |
 | `test/practice_test.sh` | The whole engine end to end, in practice mode, in a throwaway copy |
+
+## Upgrading from the first version (no sign-in)
+
+The teacher page now needs a sign-in, and n8n now reaches the engine on its
+own internal port. After updating the kit folder:
+
+1. Restart: `docker compose -f engine/docker-compose.yml up -d`
+2. Make the admin account: `docker compose -f engine/docker-compose.yml exec engine node first_run.js`
+   prints a one-use link. The engine also says this at start-up until an admin exists.
+3. If you imported the n8n form before, import it again so it uses the new
+   address: `docker compose -f engine/docker-compose.yml exec n8n n8n import:workflow --input=/workflows/teacher_form.json`,
+   then `docker compose -f engine/docker-compose.yml restart n8n`.
+
+Your units, lessons and approvals are kept.
 
 ## Commands
 
@@ -57,5 +76,8 @@ Most people never need these: the teacher page does the same.
 - **Checks before anyone sees it.** A failed check is listed on the output,
   never quietly retried on a dearer model.
 - **A monthly spending limit.** New calls are refused once it's reached.
-- **The teacher page is for this computer only** until it's behind a sign-in
-  (`docs/HOSTING.md`).
+- **Sign-in by invite only.** The admin's link comes from `first_run.js`;
+  teachers' links from the admin. Approvals are recorded in the signed-in
+  person's name.
+- **The teacher page is for this computer only** until it's behind the proxy
+  or VPN in `docs/HOSTING.md`.

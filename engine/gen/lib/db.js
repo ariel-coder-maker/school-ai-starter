@@ -44,6 +44,40 @@ create table if not exists runs (
   checks_passed  integer not null default 0,
   checks_failed  integer not null default 0,
   problems       jsonb not null default '[]'
+);
+create table if not exists users (
+  id             serial primary key,
+  name           text unique not null,
+  role           text not null check (role in ('admin', 'teacher')),
+  password_hash  text not null,
+  disabled       boolean not null default false,
+  created_at     timestamptz not null default now()
+);
+-- Each account's own folder in 06_outputs/, fixed when the account is made.
+alter table users add column if not exists folder text;
+update users set folder = 'teacher_' || id where folder is null;
+create unique index if not exists users_folder on users (folder);
+create table if not exists invites (
+  id          serial primary key,
+  token_hash  text unique not null,
+  role        text not null check (role in ('admin', 'teacher')),
+  created_by  integer,
+  expires_at  timestamptz not null,
+  used_at     timestamptz,
+  used_by     integer
+);
+create table if not exists sessions (
+  token_hash  text primary key,
+  user_id     integer not null references users(id),
+  expires_at  timestamptz not null
+);
+create table if not exists classes (
+  id       serial primary key,
+  user_id  integer not null references users(id),
+  subject  text not null,
+  grade    text not null,
+  term     integer,
+  label    text not null
 );`;
 
 async function ensureSchema() { await db().query(SCHEMA); }

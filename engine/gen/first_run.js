@@ -20,6 +20,15 @@ async function main() {
   }
 
   console.log(`✓ Kit folder found at ${kit.KIT}.`);
+  const auth = require('./lib/auth.js');
+  const admins = await auth.countUsers('admin');
+  if (!admins) {
+    const { token } = await auth.createInvite({ role: 'admin' });
+    console.log(`· Make the admin account: open ${require('./users.js').joinLink(token)} (valid 7 days, one use).`);
+    todo.push('Open the admin link above and make the admin account. The admin then invites teachers from the Admin page.');
+  } else {
+    console.log(`✓ ${admins} admin(s) and ${await auth.countUsers('teacher')} teacher(s).`);
+  }
   if (kit.exists('00_school/school_profile.md')) console.log('✓ School layer (00_school/) is set up.');
   else { console.log('· School layer not set up yet.'); todo.push('Type "setup" in your AI tool to fill in 00_school/.'); }
 

@@ -30,8 +30,14 @@ the providers, not on your server.
 
 ## Before anyone else can reach it: sign-in
 
-**The engine's teacher page has no sign-in.** That's why `docker-compose.yml`
-publishes it on `127.0.0.1` only. Before you open it to the school network:
+**The teacher page has its own sign-in:** people join only by a one-use
+invite link from the admin, passwords are stored scrypt-hashed, and sessions
+last 12 hours. To sign someone out at once and stop them signing in:
+`docker compose -f engine/docker-compose.yml exec engine node users.js disable "Name"`, or Disable on the Admin page. That
+is enough for a school's own computer or network. It is **not** enough for the
+open internet: there's no rate limit on sign-in attempts and no two-factor
+sign-in. That's why `docker-compose.yml` publishes it on `127.0.0.1` only.
+Before you open it beyond this computer:
 
 1. Put it behind a reverse proxy that requires sign-in. For example, Caddy
    or nginx with your school's single sign-on (through `oauth2-proxy`), or at
@@ -43,6 +49,12 @@ publishes it on `127.0.0.1` only. Before you open it to the school network:
 
 n8n has its own sign-in: the first person to open it creates the owner
 account. Create accounts for colleagues from n8n's settings.
+
+n8n talks to the engine on a second, **internal port (3001)** that is never
+published: only containers on the engine's Docker network can reach it, and
+what n8n makes is recorded as "(via n8n)". n8n's own form pages are public to
+anyone who can reach n8n's port, so keep that port on `127.0.0.1` or behind
+the same proxy.
 
 ## Keys and spending
 

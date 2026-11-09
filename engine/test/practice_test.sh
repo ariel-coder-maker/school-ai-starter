@@ -25,7 +25,9 @@ cleanup() {
 trap cleanup EXIT
 
 echo "Copying the kit to $T"
-(cd "$KIT" && tar --exclude=.git --exclude=node_modules --exclude=00_school/*.md --exclude=06_outputs/*/ -cf - .) | (cd "$T" && tar -xf -)
+# Only what git would publish: tracked files, plus new ones not ignored. Never
+# the maintainer's own school data, .env or node_modules.
+(cd "$KIT" && git ls-files -co --exclude-standard -z | tar --null -T - -cf -) | (cd "$T" && tar -xf -)
 cp -r "$KIT/examples/sample_school/"{00_school,01_curriculum,03_resources,05_checks} "$T/"
 cp "$T/engine/.env.example" "$T/engine/.env"
 sed -i 's/^N8N_PORT=.*/N8N_PORT=5690/; s/^ENGINE_PORT=.*/ENGINE_PORT=3010/; s/^POSTGRES_PASSWORD=.*/POSTGRES_PASSWORD=kit-test-only/' "$T/engine/.env"
@@ -99,12 +101,34 @@ E node approve.js $D/1_outline.md --by "Test Teacher" >/dev/null 2>&1
 E node step.js sequence $U >/dev/null 2>&1
 expect "same text on a new outline needs approving"  "sequence (draft|changed since approval)" E node status.js
 
+echo "Unit tests"
+expect "accounts, school layer and server tests pass" "# fail 0"                    E sh -c 'node --test test/*.test.js'
+
+echo "Sign-in and onboarding"
+TP=http://127.0.0.1:3010
+J1="$T/admin.cookies"; J2="$T/teacher.cookies"
+jpost() { curl -s -b "$1" -c "$1" -X "$2" -H 'Content-Type: application/json' -d "$4" "$TP$3"; }
+ADMIN_TOKEN=$(E node users.js invite admin | grep -oE '#/join/[A-Za-z0-9_-]+' | sed 's|#/join/||')
+expect "first run would show the admin link"          "Make the admin account|admin\(s\)" E node first_run.js
+expect "the admin joins by link"                      '"role":"admin"'               jpost "$J1" POST /api/join "{\"token\":\"$ADMIN_TOKEN\",\"name\":\"Practice Admin\",\"password\":\"practice-test-only\"}"
+expect "the admin is signed in"                       '"role":"admin"'               curl -s -b "$J1" $TP/api/me
+expect "the same link can't be used twice"            "expired or was already used"  jpost "$T/nobody.cookies" POST /api/join "{\"token\":\"$ADMIN_TOKEN\",\"name\":\"Second Admin\",\"password\":\"practice-test-only\"}"
+expect "no session: a step is refused"                "^401$"                        curl -s -o /dev/null -w '%{http_code}' -X POST -H 'Content-Type: application/json' -d '{}' $TP/api/step
+TEACHER_TOKEN=$(jpost "$J1" POST /api/invites '{"role":"teacher"}' | grep -oE '#/join/[A-Za-z0-9_-]+' | sed 's|#/join/||')
+expect "the teacher joins by the admin's link"        '"role":"teacher"'             jpost "$J2" POST /api/join "{\"token\":\"$TEACHER_TOKEN\",\"name\":\"Practice Teacher\",\"password\":\"practice-test-only\"}"
+HOUSE=$(python3 -c 'import json,sys; print(json.dumps({"text": open(sys.argv[1], encoding="utf-8").read()}))' "$T/00_school/house_style.md")
+expect "a teacher can't edit the school layer"        "^403$"                        curl -s -o /dev/null -w '%{http_code}' -b "$J2" -X PUT -H 'Content-Type: application/json' -d "$HOUSE" $TP/api/school/house_style.md
+expect "the admin can"                                "^200$"                        curl -s -o /dev/null -w '%{http_code}' -b "$J1" -X PUT -H 'Content-Type: application/json' -d "$HOUSE" $TP/api/school/house_style.md
+expect "the teacher adds a class"                     '"label":"7B Science"'         jpost "$J2" POST /api/classes '{"subject":"science","grade":"Grade 7","term":1,"label":"7B Science"}'
+
 echo "Teacher page and API"
-expect "the teacher page loads"                      "Teacher page"                 curl -s http://127.0.0.1:3010/
-expect "the status API answers"                      "\"school\":true"              curl -s http://127.0.0.1:3010/api/status
-expect "a refused step comes back as a message"      "Waiting"                      curl -s -X POST -H 'Content-Type: application/json' -d '{"kind":"worksheet","subject":"science","unit":"grade_7_t1_forces","lesson":"9"}' http://127.0.0.1:3010/api/step
-expect "n8n is up"                                   "200|302"                      curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:5690/
-expect "the engine runs as an ordinary user"         "^1000$"                       E id -u
+expect "the teacher page loads"                       "School AI"                    curl -s $TP/
+expect "the status API answers, signed in"            "\"school\":true"              curl -s -b "$J2" $TP/api/status
+expect "a refused step comes back as a message"       "Waiting"                      jpost "$J2" POST /api/step '{"kind":"worksheet","subject":"science","unit":"grade_7_t1_forces","lesson":"9"}'
+expect "n8n is up"                                    "200|302"                      curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:5690/
+expect "the engine runs as an ordinary user"          "^1000$"                       E id -u
+expect "n8n reaches the internal port"                '"ok":true'                    docker exec ${P}-n8n-1 wget -qO- http://engine:3001/health
+expect "this computer can't reach the internal port"  "^000$"                        curl -s -m 3 -o /dev/null -w '%{http_code}' http://127.0.0.1:3001/health
 
 echo "The n8n teacher form"
 E node approve.js $D/2_sequence.md --by "Test Teacher" >/dev/null 2>&1

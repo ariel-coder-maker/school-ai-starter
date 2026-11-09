@@ -44,12 +44,15 @@ const pad = (n) => String(n).padStart(2, '0');
 // Where every file of a unit lives.
 function unitPaths(a) {
   if (!a.subject) throw new Refused('Say which subject (--subject), as named in 01_curriculum/.');
-  if (!kit.exists(`01_curriculum/${a.subject}`)) {
+  // Names from a request become folder names, so only a subject that is set up,
+  // and only a unit name of the shape the engine makes, can reach a path.
+  if (!kit.subjects().includes(String(a.subject))) {
     throw new Refused(`There is no 01_curriculum/${a.subject}/ folder. Run setup's Block C for this subject first, or check the spelling. `
       + `Subjects set up: ${kit.subjects().join(', ') || 'none yet'}.`);
   }
   const unit = a.unit || (a.grade && a.term && a.topic ? kit.slug(`${a.grade} t${a.term} ${a.topic}`) : null);
   if (!unit) throw new Refused('Say which unit (--unit), or for a new unit give --grade, --term and --topic.');
+  if (!/^[a-z0-9_]{1,60}$/.test(unit)) throw new Refused(`"${unit}" is not a unit name. Unit names use only lowercase letters, numbers and _.`);
   const dir = `01_curriculum/${a.subject}/units/${unit}`;
   const teacher = kit.slug(a.teacher || 'shared') || 'shared';
   const out = `06_outputs/${teacher}/${a.subject}_${unit}`;

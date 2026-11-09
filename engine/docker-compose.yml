@@ -48,6 +48,8 @@ services:
       DATABASE_URL: postgres://school_ai:${POSTGRES_PASSWORD:-change-me-once}@postgres:5432/school_ai
       ENGINE_PORT: 3000
       ENGINE_PORT_HOST: ${ENGINE_PORT:-3000}
+      # n8n reaches the engine here, on the Docker network only (never published).
+      ENGINE_INTERNAL_PORT: 3001
     volumes:
       - ../:/kit
     ports:

@@ -7,10 +7,12 @@ engine/.env
 # Delete these lines only if this is a private repository for your own school.
 00_school/*.md
 !00_school/_templates/
+00_school/.versions/
 01_curriculum/*/
 !01_curriculum/_template/
 02_sources/*
 !02_sources/README.md
+05_checks/checks.md
 03_resources/*.md
 !03_resources/README.md
 06_outputs/*
@@ -32,3 +34,6 @@ node_modules/
 
 # Build notes for the maintainer (not part of the kit)
 BUILD_STATUS.md
+
+# The maintainer's own private terms for the publish audit (never committed)
+engine/test/.audit_private_terms

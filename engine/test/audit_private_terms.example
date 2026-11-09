@@ -1,0 +1,19 @@
+# Copy this file to engine/test/.audit_private_terms (it is never committed)
+# and list the things that must never be published, one pattern per line.
+# Case doesn't matter. Lines starting with # are ignored.
+#
+# Your school's name and its short form:
+# example academy
+# \bEXA\b
+#
+# Your town or city, if it would identify the school:
+# lakeside
+#
+# Your computer's user name (it shows up in file paths):
+# yourwindowsname
+#
+# The names of private repos or folders:
+# my-private-repo
+#
+# Your own email address:
+# you@yourschool\.example
